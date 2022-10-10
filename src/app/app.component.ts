@@ -66,4 +66,12 @@ export class AppComponent implements OnInit {
     });
   }
 
+  sendAuction() {
+    this.socket.emit('auction', this.localAuction);
+  }
+
+  sendBid() {
+    this.socket.emit('bid', this.bid);
+  }
+
 }
