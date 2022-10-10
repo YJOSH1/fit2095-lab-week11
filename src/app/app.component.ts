@@ -28,6 +28,9 @@ export class AppComponent implements OnInit {
 
   socket:any;
 
+  userName: string = '';
+  bidValue: number = 0;
+
   localAuction: auction = {
     name: '',
     isBidActive: false,
@@ -35,16 +38,11 @@ export class AppComponent implements OnInit {
     targetPrice: 0
   }
 
-  bid: bid = {
-    name: '',
-    value: 0
-  } 
-
   bids: bid[] = [];
 
   bestBid: bestBid = {
     highestVal: 0,
-    name: ''
+    name: 'no one'
   }
 
   ngOnInit(): void {
@@ -63,15 +61,27 @@ export class AppComponent implements OnInit {
 
     this.socket.on('onAuction', (auction: auction) => {
       this.localAuction = auction;
+      if (!this.localAuction.isBidActive) {
+        this.bids = [];
+        this.bestBid.highestVal = 0;
+        this.bestBid.name = 'no one'
+      }
+      console.log(this.localAuction);
     });
   }
 
   sendAuction() {
+    this.localAuction.name = this.userName;
+    console.log(this.localAuction);
     this.socket.emit('auction', this.localAuction);
   }
 
   sendBid() {
-    this.socket.emit('bid', this.bid);
+    let newBid: bid = {
+      name: this.userName,
+      value: this.bidValue
+    }
+    this.socket.emit('bid', newBid);
   }
 
 }

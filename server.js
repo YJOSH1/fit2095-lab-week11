@@ -8,7 +8,7 @@ const path = require('path');
 
 app.use('/', express.static(path.join(__dirname, 'dist/fit2095-lab-week11')));
 
-let auction={
+let auction = {
     name: '',              // name of the auction generator
     isBidActive: false,    // true if the auction is still active; false otherwise
     auctionDescription: '',// Describe the auction
@@ -21,16 +21,16 @@ io.on('connection', function(socket) {
     socket.emit('onAuction', auction);
 
     socket.on('auction', (localAuction) => {
-        localAuction.isBidActive = true;
         auction = localAuction;
-        socket.broadcast.emit('onAuction', auction);
+        auction.isBidActive = true;
+        io.emit('onAuction', auction);
     });
 
     socket.on('bid', (bid) => {
-        socket.broadcast.emit('onBid', bid);
-        if (this.auction.targetPrice <= bid.value) {
+        io.emit('onBid', bid);
+        if (auction.targetPrice <= bid.value) {
             auction.isBidActive = false;
-            socket.broadcast.emit('onAuction', auction)            
+            io.emit('onAuction', auction)            
         }
     });
 });
