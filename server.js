@@ -12,13 +12,27 @@ let auction={
     name: '',              // name of the auction generator
     isBidActive: false,    // true if the auction is still active; false otherwise
     auctionDescription: '',// Describe the auction
-    targetPrice: 0         // THe asked price for the auction
+    targetPrice: 0         // The asked price for the auction
 };
 
 io.on('connection', function(socket) {
     console.log('new connection made, ' + socket.id);
 
-    socket.emit('onAuctionUpdate', auction);
+    socket.emit('onAuction', auction);
+
+    socket.on('auction', (localAuction) => {
+        localAuction.isBidActive = true;
+        auction = localAuction;
+        socket.broadcast.emit('onAuction', auction);
+    });
+
+    socket.on('bid', (bid) => {
+        socket.broadcast.emit('onBid', bid);
+        if (this.auction.targetPrice <= bid.value) {
+            auction.isBidActive = false;
+            socket.broadcast.emit('onAuction', auction)            
+        }
+    });
 });
 
 server.listen(port, () => {

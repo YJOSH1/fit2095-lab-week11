@@ -1,0 +1,33 @@
+<div class="section container" *ngIf="!localAuction.isBidActive">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="localAuction.name">
+    </div>
+    <div class="form-group">
+      <label for="auctionDescription">Auction Description</label>
+      <input type="text" class="form-control" id="auctionDescription" [(ngModel)]="localAuction.auctionDescription">
+    </div>
+    <div class="form-group">
+      <label for="targetPrice">Target Price</label>
+      <input type="number" class="form-control" id="targetPrice" [(ngModel)]="localAuction.targetPrice">
+    </div>
+    <button type="submit" class="btn btn-primary">New Auction</button>
+</div>
+
+<div class="section container" *ngIf="!localAuction.isBidActive">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="bid.name">
+    </div>
+    <div class="form-group">
+      <label>Auction Description</label>
+      <p>{{localAuction.auctionDescription}}</p>
+    </div>
+    <div class="form-group">
+      <label for="bid">Your Bid</label>
+      <input type="number" class="form-control" id="bid" [(ngModel)]="bid.value">
+    </div>
+    <button type="submit" class="btn btn-primary">Send Bid</button>
+    <hr>
+
+</div>

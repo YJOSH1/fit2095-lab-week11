@@ -1,0 +1,27 @@
+.btn-primary {
+    background-color: #6C63FF !important;
+    border: #6C63FF !important;
+}
+
+.btn-primary:hover {
+    background-color: #483eff !important;
+    border: #483eff !important;
+}
+
+.img-cont {
+    text-align: center;
+}
+
+.img {
+    margin-top: 50px;
+    width: 25%;
+    height: auto;
+}
+
+.section {
+    margin-top: 50px !important;
+}
+
+.form-group {
+    padding-bottom: 20px !important;
+}

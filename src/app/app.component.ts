@@ -1,11 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { io } from 'socket.io-client';
 
-interface Auction {
+interface auction {
   name: string;      
   isBidActive: boolean;
   auctionDescription: string;
   targetPrice: number;  
+}
+
+interface bid {
+  name: string;
+  value: number;
+}
+
+interface bestBid {
+  highestVal: number;
+  name: string;
 }
 
 @Component({
@@ -18,20 +28,41 @@ export class AppComponent implements OnInit {
 
   socket:any;
 
-  localAuction: Auction = {
+  localAuction: auction = {
     name: '',
     isBidActive: false,
     auctionDescription: '',
     targetPrice: 0
   }
 
+  bid: bid = {
+    name: '',
+    value: 0
+  } 
+
+  bids: bid[] = [];
+
+  bestBid: bestBid = {
+    highestVal: 0,
+    name: ''
+  }
+
   ngOnInit(): void {
     this.socket = io();
+    this.listenToEvents();
   };
 
   listenToEvents() {
-    this.socket.on('onAuctionUpdate', (data: Auction) => {
+    this.socket.on('onBid', (bid: bid) => {
+      this.bids.push(bid);
+      if (bid.value > this.bestBid.highestVal) {
+        this.bestBid.highestVal = bid.value;
+        this.bestBid.name = bid.name;
+      }
+    });
 
+    this.socket.on('onAuction', (auction: auction) => {
+      this.localAuction = auction;
     });
   }
 
