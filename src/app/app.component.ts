@@ -6,6 +6,7 @@ interface auction {
   isBidActive: boolean;
   auctionDescription: string;
   targetPrice: number;  
+  dateTime: string;
 }
 
 interface bid {
@@ -35,10 +36,12 @@ export class AppComponent implements OnInit {
     name: '',
     isBidActive: false,
     auctionDescription: '',
-    targetPrice: 0
+    targetPrice: 0,
+    dateTime: ''
   }
 
   bids: bid[] = [];
+  auctions: auction[] = [];
 
   bestBid: bestBid = {
     highestVal: 0,
@@ -61,6 +64,9 @@ export class AppComponent implements OnInit {
 
     this.socket.on('onAuction', (auction: auction) => {
       this.localAuction = auction;
+      if (this.localAuction.isBidActive) {
+        this.auctions.push(this.localAuction);
+      }
       if (!this.localAuction.isBidActive) {
         this.bids = [];
         this.bestBid.highestVal = 0;
@@ -72,7 +78,16 @@ export class AppComponent implements OnInit {
 
   sendAuction() {
     this.localAuction.name = this.userName;
+    let currentdate = new Date(); 
+    let dateTime = currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " @ "  
+                    + currentdate.getHours() + ":"  
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+    this.localAuction.dateTime = dateTime;
     console.log(this.localAuction);
+    // this.auctions.push(this.localAuction);
     this.socket.emit('auction', this.localAuction);
   }
 
